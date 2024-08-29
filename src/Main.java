@@ -10,22 +10,13 @@ import java.util.stream.*;
 
 public class Main {
 
+    public static void main(String[] sand) {
 
-
-    public static void main(String[] args) throws Exception {
-
-      var cars = new ArrayList<Car>();
-      cars.add(new Car("Mustang", 1967));
-        cars.add(new Car("Thunderbird", 1967));
-        cars.add(new Car("Escort", 1975));
-        var map = cars.stream().collect(Collectors.groupingByConcurrent(Car::year));
-        System.out.println(map);
     }
 }
 
-record Car(String model, int year){
-    @Override public String toString(){return model;}
-}
+
+
 
 
 

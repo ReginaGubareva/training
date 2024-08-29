@@ -1,32 +1,32 @@
 public class MyLinkedList {
     int size = 0;
-    Node head;
-    Node tail;
+    MyNode head;
+    MyNode tail;
 
     MyLinkedList(){
     }
     
     public void addAtHead(int val){
-        Node newNode = new Node(val);
+        MyNode newMyNode = new MyNode(val);
         if(head == null) {
-            head = tail = newNode;
+            head = tail = newMyNode;
         }  else {
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
+            newMyNode.next = head;
+            head.prev = newMyNode;
+            head = newMyNode;
         }
         size++;
     }
     
     public void addAtTail(int val){
 
-        Node newNode = new Node(val);
+        MyNode newMyNode = new MyNode(val);
         if( tail == null){
-            head = tail = newNode;
+            head = tail = newMyNode;
         } else {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
+            tail.next = newMyNode;
+            newMyNode.prev = tail;
+            tail = newMyNode;
         }
         size++;
     }
@@ -41,14 +41,14 @@ public class MyLinkedList {
             addAtTail(val);
             return;
         }
-        Node current = head;
+        MyNode current = head;
         for(int i = 0; i < index - 1; i++){
             current = current.next;
         }
 
-        Node newNode = new Node(val, current, current.next);
-        current.next.prev = newNode;
-        current.next = newNode;
+        MyNode newMyNode = new MyNode(val, current, current.next);
+        current.next.prev = newMyNode;
+        current.next = newMyNode;
         size++;
     }
 
@@ -70,7 +70,7 @@ public class MyLinkedList {
         if(size == 0) return  -1;
         if(index > size - 1) return -1;
 
-        Node current = head;
+        MyNode current = head;
         for(int i = 0; i < index; i++){
             current = current.next;
         }
@@ -78,7 +78,7 @@ public class MyLinkedList {
     }
 
     public void printList() {
-        Node current = head;
+        MyNode current = head;
         while (current != null) {
             System.out.print(current.val + " ");
             current = current.next;
@@ -88,34 +88,34 @@ public class MyLinkedList {
 
 }
 
-class Node{
+class MyNode {
     int val;
-    Node prev;
-    Node next;
+    MyNode prev;
+    MyNode next;
     
-    public Node(int val){
+    public MyNode(int val){
         this.val = val;
     }
     
-    public Node(int val, Node prev, Node next){
+    public MyNode(int val, MyNode prev, MyNode next){
         this.val = val;
         this.prev = prev;
         this.next = next;
     }
 
-    public Node getNext() {
+    public MyNode getNext() {
         return next;
     }
 
-    public void setNext(Node next) {
+    public void setNext(MyNode next) {
         this.next = next;
     }
 
-    public Node getPrev() {
+    public MyNode getPrev() {
         return prev;
     }
 
-    public void setPrev(Node prev) {
+    public void setPrev(MyNode prev) {
         this.prev = prev;
     }
 

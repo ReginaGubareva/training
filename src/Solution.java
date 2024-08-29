@@ -2,18 +2,543 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-
-        ListNode list1 = new ListNode(1);
-        list1.next = new ListNode(2);
-        list1.next.next = new ListNode(4);
-
-
-        ListNode list2 = new ListNode(1);
-        list2.next = new ListNode(3);
-        list2.next.next = new ListNode(4);
-
-        mergeTwoLists(list1, list2);
+//        [[],[1,"foo"],[2,"bar"],[3,"foo"],[8,"bar"],[10,"foo"],[11,"foo"]]
+        Logger obj = new Logger();
+//         boolean param_1 = obj.shouldPrintMessage(timestamp,message);
     }
+
+
+
+
+    // 219. Contains Duplicate II
+    public static boolean containsNearbyDuplicate(int[] nums, int k) {
+        Map<Integer, Integer> hm = new HashMap<Integer, Integer>();
+        for (int i = 0; i < nums.length; i++) {
+            if (hm.containsKey(nums[i])) {
+                int previndex = hm.get(nums[i]);
+                if (Math.abs(i - previndex) <= k) {
+                    return true;
+                }
+            }
+            hm.put(nums[i], i);
+        }
+
+        return false;
+    }
+
+    // 387. First Unique Character in a String
+    public int firstUniqChar(String s) {
+        Map<Character, Integer> frequencyMap = new HashMap<>();
+        Map<Character, Integer> indexMap = new HashMap<>();
+
+        // Fill the maps
+        for (int i = 0; i < s.length(); i++) {
+            char key = s.charAt(i);
+
+            // Update the frequency map
+            frequencyMap.put(key, frequencyMap.getOrDefault(key, 0) + 1);
+
+            // Store the first occurrence index in the index map
+            if (!indexMap.containsKey(key)) {
+                indexMap.put(key, i);
+            }
+        }
+
+        int result = -1;
+
+        // Find the first character with a frequency of 1
+        for (Map.Entry<Character, Integer> entry : frequencyMap.entrySet()) {
+            if (entry.getValue() == 1) {
+                int index = indexMap.get(entry.getKey());
+                if (result == -1 || index < result) {
+                    result = index;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // 599. Minimum Index Sum of Two Lists
+    public static String[] findRestaurant(String[] list1, String[] list2) {
+        Map<Integer, List<String>> map = new HashMap<>();
+
+        int min = 2001;
+        for(int i = 0; i < list1.length; i++){
+            for(int j = 0; j < list2.length; j++){
+                if(list1[i].equals(list2[j])){
+                    if(map.containsKey(i+j)){
+                        map.get(i+j).add(list1[i]);
+                    } else {
+                        List<String> list = new ArrayList<>();
+                        list.add(list1[i]);
+                        map.put(i + j, list);
+                    }
+                    if( i + j < min) min = i + j;
+                }
+            }
+        }
+        return map.get(min).toArray(String[]::new);
+    }
+
+    // 205. Isomorphic Strings
+    public static boolean isIsomorphic(String s, String t) {
+          Map<Character, Character> map = new HashMap<>();
+
+          for(int i = 0; i < s.length(); i++){
+              char key = s.charAt(i);
+              char value = t.charAt(i);
+              if(map.containsKey(key) && map.get(key) != value) {
+                  return false;
+              } else {
+                  if(map.containsValue(value)) return false;
+                  map.put(key, value);
+              }
+          }
+          return true;
+    }
+
+
+    // 7. Reverse Integer
+    public static int reverse(int x) {
+        long result = 0;
+        while (x != 0){
+            int digit = x % 10;
+            result = result*10 + digit;
+            if(result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) return 0;
+            x /= 10;
+        }
+        return (int) result;
+    }
+
+
+    // 191. Number of 1 Bits
+    public static int hammingWeight(int n) {
+
+        int count = 0;
+        while (n != 0){
+            int rest = n % 2;
+            n /= 2;
+            if(rest == 1) count++;
+        }
+        return count;
+    }
+
+
+    // 202. Happy Number
+    public boolean isHappy(int n) {
+        long num = n;
+        while(num > 9){
+            num = sumSquaresOfDigits(num);
+        }
+
+        return num == 1 || num == 7;
+    }
+
+    private long sumSquaresOfDigits(long n) {
+        long sum = 0;
+        while (n != 0){
+            long digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
+        }
+        return sum;
+    }
+
+    public static boolean isPowerOfTwo(int number) {
+        return number > 0 && (number & (number - 1)) == 0;
+    }
+
+
+    // 349. Intersection of Two Arrays
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set = new HashSet<>();
+        Set<Integer> res = new HashSet<>();
+
+        for(int num : nums1){
+            set.add(num);
+        }
+        for(int num: nums2){
+            if(set.contains(num)) res.add(num);
+        }
+
+        return res.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    // 136. Single Number
+    public static int singleNumber(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for(int num : nums){
+            if(set.contains(num)) {
+                set.remove(num);
+            } else {
+                set.add(num);
+            }
+        }
+        return set.iterator().next();
+    }
+
+    // 217. Contains Duplicate
+    public static boolean containsDuplicate(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for(Integer i: nums){
+            if(set.contains(i)) return true;
+            set.add(i);
+        }
+        return false;
+    }
+
+
+    // 21.Merge Two Sorted Lists
+    public ListNode mergeTwoListsRecursive(ListNode l1, ListNode l2) {
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+
+        if (l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l1, l2.next);
+            return l2;
+        }
+    }
+
+    // Pascal Triangle
+    public static List<Integer> getRowRecursive(int rowIndex) {
+
+        if(rowIndex == 0){
+            List<Integer> resultList = new ArrayList<>();
+            resultList.add(1);
+            return resultList;
+        }
+        if(rowIndex == 1){
+            List<Integer> resultList = new ArrayList<>();
+            resultList.add(1);
+            resultList.add(1);
+            return resultList;
+        }
+        List<Integer> prevRow = getRowRecursive(rowIndex - 1);
+        List<Integer> resultList = new ArrayList<>();
+        resultList.add(1);
+        for(int i = 0; i < prevRow.size() - 1; i++){
+            resultList.add(prevRow.get(i) + prevRow.get(i+1));
+        }
+        resultList.add(1);
+        return resultList;
+    }
+
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) return new ArrayList<>();
+        return generateTrees(1, n);
+    }
+
+    private List<TreeNode> generateTrees(int start, int end) {
+        List<TreeNode> trees = new ArrayList<>();
+
+        if (start > end) {
+            trees.add(null);
+            return trees;
+        }
+
+        for (int i = start; i <= end; i++) {
+            // Generate all possible left subtrees with values < i
+            List<TreeNode> leftSubtrees = generateTrees(start, i - 1);
+            // Generate all possible right subtrees with values > i
+            List<TreeNode> rightSubtrees = generateTrees(i + 1, end);
+
+            // Combine all left and right subtrees with the current root i
+            for (TreeNode left : leftSubtrees) {
+                for (TreeNode right : rightSubtrees) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = left;
+                    root.right = right;
+                    trees.add(root);
+                }
+            }
+        }
+
+        return trees;
+    }
+
+
+
+    public static int kthGrammar(int n, int k) {
+        if(n == 1){
+            return 0;
+        }
+        int mid = (int) Math.pow(2, n-1)/2;
+        if(k <= mid){
+            return kthGrammar(n - 1, k);
+        } else {
+            return 1 - kthGrammar(n - 1, k - mid);
+        }
+    }
+
+
+
+    public static double myPow(double x, int n) {
+        if (n == 0) return 1.0;
+        if (x == 1.0) return 1.0;
+        if (x == -1.0 && n % 2 == 0) return 1.0;
+        if (x == -1.0 && n % 2 != 0) return -1.0;
+        if (x == 0.0) return 0.0;
+
+        if (n % 2 == 1)
+            return x * myPow(x, n - 1);
+
+        if (n % 2 == 0)
+            return myPow(x * x, n / 2);
+
+        return 1 / myPow(x, -n);
+    }
+
+    public static int maxDepth(TreeNode root) {
+        return root == null ? 0 : 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+    }
+
+
+    public static Map<Integer, Integer> map = new HashMap<>();
+
+    public static int climbStairs(int n) {
+        if(map.containsKey(n)) return map.get(n);
+        int result;
+        if(n < 2){
+            result = n;
+        } else{
+            result = climbStairs(n - 1) + climbStairs(n-2);
+        }
+        map.put(n, result);
+        return result;
+    }
+
+    public static int fib(int n) {
+        if(map.containsKey(n)) return map.get(n);
+        int result = 0;
+        if(n < 2) {
+            result = n;
+        } else {
+            result = fib(n - 1) + fib(n - 2);
+        }
+        map.put(n, result);
+        return result;
+    }
+
+    public static TreeNode searchBST(TreeNode root, int val) {
+        if(root == null || root.val == val) return root;
+        return root.val > val ? searchBST(root.left, val) : searchBST(root.right, val);
+    }
+
+    public static ListNode reverseListRecursion(ListNode head) {
+        if(head == null || head.next == null) return head;
+
+        ListNode newHead = reverseListRecursion(head.next);
+
+        head.next.next = head;
+        head.next = null;
+
+        return newHead;
+    }
+
+    public static void printList(ListNode head) {
+        ListNode current = head;
+        while (current != null) {
+            System.out.print(current.val + " -> ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+
+
+    public static ListNode swapPairs(ListNode head) {
+        if(head == null || head.next == null) return head;
+
+        ListNode second = head.next;
+
+        ListNode newHead = swapPairs(second.next);
+        second.next = head;
+        head.next = newHead;
+
+        return second;
+    }
+
+    public static void printReverse(int index, String str){
+        if(str == null || index >= str.length()) return;
+        printReverse(index+1, str);
+        System.out.print(str.charAt(index));
+    }
+
+    public static ListNode frequenciesOfElements(ListNode head) {
+        int[] counts = new int[10001];
+        ListNode current = head;
+        while(current != null){
+            counts[current.val]++;
+            current = current.next;
+        }
+
+        ListNode freq = new ListNode(0);
+        ListNode p = freq;
+        for(int i = 0; i < counts.length; i++){
+            if(counts[i] != 0){
+                p.next = new ListNode(counts[i]);
+                p = p.next;
+            }
+        }
+        return freq.next;
+    }
+
+    public static int missingInteger(int[] nums) {
+        if(nums.length == 0) return 0;
+
+        int sum = nums[0];
+        for(int i = 1; i < nums.length; i++){
+            if(nums[i] != nums[i-1] + 1) break;
+            else sum += nums[i];
+        }
+        while (true){
+            if(!elementFind(nums, sum)) return sum;
+            else sum++;
+        }
+    }
+
+    public static boolean elementFind(int[] nums, int element){
+        for(int num:nums){
+            if(num==element) return true;
+        }
+        return false;
+    }
+
+    public static int findMaxConsecutiveOnes2(int[] nums) {
+        int zeros = 0, result = 0;
+        int left = 0, right = 0;
+        while(right < nums.length) {
+            if (nums[right] == 0)  zeros++;
+
+            while (zeros > 1) {
+                if (nums[left] == 0) {
+                    zeros--;
+                }
+                left++;
+            }
+
+            result = Math.max(right - left + 1, result);
+            right++;
+        }
+        return result;
+    }
+
+    public static Node copyRandomList(Node head) {
+        if(head == null) return null;
+
+        Map<Node, Node> map = new HashMap<>();
+        Node current = head;
+
+        while (current != null){
+            map.put(current, new Node(current.val));
+            current = current.next;
+        }
+
+        current = head;
+        while (current != null){
+            Node copy = map.get(current);
+            copy.next = map.get(current.next);
+            copy.random = map.get(current.random);
+            current = current.next;
+        }
+
+        return map.get(head);
+    }
+
+
+
+//    public static Node insert(Node head, int insertVal) {
+//        Node newNode = new Node(insertVal);
+//        if(head == null) {
+//            newNode.next = newNode;
+//            return newNode;
+//        }
+//        if (head.next == head) {
+//            head.next = newNode;
+//            newNode.next = head;
+//            return head;
+//        }
+//
+//        Node current = head;
+//
+//        while (true){
+//            if(current.val <= insertVal & insertVal <= current.next.val){
+//                break;
+//            }
+//
+//            if(current.val > current.next.val || current.next == head){
+//                if(insertVal >= current.val || insertVal <= current.next.val){
+//                    break;
+//                }
+//            }
+//
+//            current = current.next;
+//            if(current == head) break;
+//        }
+//        newNode.next = current.next;
+//        current.next = newNode;
+//        return head;
+//    }
+
+//    public static Node flatten(Node head) {
+//        if(head == null) return head;
+//
+//        Node curr = head;
+//        while (curr != null){
+//            if (curr.child != null){
+//                Node childTail = findTail(curr.child);
+//
+//                childTail.next = curr.next;
+//                if(curr.next != null) curr.next.prev = childTail;
+//                curr.next = curr.child;
+//                curr.child.prev  = curr;
+//                curr.child = null;
+//            }
+//            curr = curr.next;
+//        }
+//
+//        return head;
+//    }
+
+    public static Node findTail(Node child){
+        while (child.next != null){
+            child = child.next;
+        }
+        return child;
+    }
+
+
+
+    public static ListNode rotateRight(ListNode head, int k) {
+
+        if(head == null || head.next == null || k == 0) return head;
+
+        int len = 1;
+        ListNode last = head;
+        while(last.next != null){
+            last = last.next;
+            len++;
+        }
+
+        k = k % len;
+        if(k == 0) return head;
+
+        ListNode newTail = head;
+        for(int i = 1; i < len - k; i++){
+            newTail = newTail.next;
+        }
+
+        ListNode newHead = newTail.next;
+        newTail.next = null;
+        last.next = head;
+
+        return newHead;
+    }
+
 
     public static ListNode mergeTwoLists(ListNode list1, ListNode list2) {
         ListNode dummy = new ListNode(0);
@@ -196,13 +721,6 @@ public class Solution {
             current = nextNode;
         }
         return prev;
-    }
-
-    public static void printList(ListNode head){
-        while (head.next != null){
-            System.out.print(head.val +  " ");
-            head = head.next;
-        }
     }
 
     public static ListNode removeNthFromEnd(ListNode head, int n) {
@@ -710,6 +1228,7 @@ public class Solution {
         return k;
     }
 
+    // 1. Two Sum
     public static int[] twoSum(int[] numbers, int target) {
         int i = 0, j = numbers.length - 1;
         while(i < j){
