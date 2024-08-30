@@ -17,7 +17,6 @@ public class Logger {
             }
         }
 
-
         if(!map.containsValue(message)){
             map.put(timestamp, message);
             return true;

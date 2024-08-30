@@ -2,9 +2,117 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-//        [[],[1,"foo"],[2,"bar"],[3,"foo"],[8,"bar"],[10,"foo"],[11,"foo"]]
-        Logger obj = new Logger();
-//         boolean param_1 = obj.shouldPrintMessage(timestamp,message);
+
+        TreeNode root = new TreeNode(1);
+        TreeNode left = new TreeNode(2);
+        TreeNode right = new TreeNode(3);
+        root.left = left;
+        root.right = right;
+        TreeNode left1 = new TreeNode(4);
+        TreeNode left2 = new TreeNode(2);
+        left.left = left1;
+        right.left = left2;
+        right.left.left = new TreeNode(4);
+        right.right = new TreeNode(4);
+        findDuplicateSubtrees(root);
+    }
+
+    // 652. Find Duplicate Subtrees
+    private static final Map<String, Integer> subtreeCount = new HashMap<>();
+    private static final Set<TreeNode> duplicateSubtrees = new HashSet<>();
+
+    public static List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        traverseAndFindDuplicates(root);
+        return new ArrayList<>(duplicateSubtrees);
+    }
+
+    private static String traverseAndFindDuplicates(TreeNode node) {
+        if(node == null){
+            return "#";
+        }
+
+        String left = traverseAndFindDuplicates(node.left);
+        String right = traverseAndFindDuplicates(node.right);
+        String key = left + "," + right + "," + node.val;
+
+        subtreeCount.put(key, subtreeCount.getOrDefault(key, 0) + 1);
+
+        if(subtreeCount.get(key) == 2){
+            duplicateSubtrees.add(node);
+        }
+        return key;
+    }
+
+    // 36. Valid Sudoku
+    public static boolean isValidSudoku(char[][] board) {
+        Set<Character> rows = new HashSet<>();
+        Set<Character> cols = new HashSet<>();
+        Set<Character> blocks = new HashSet<>();
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char rowVal = board[i][j];
+                char colVal = board[j][i];
+                char blockVal = board[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3];
+
+                if (rowVal != '.' && !rows.add(rowVal)) {
+                    return false;
+                }
+                if (colVal != '.' && !cols.add(colVal)) {
+                    return false;
+                }
+                if (blockVal != '.' && !blocks.add(blockVal)) {
+                    return false;
+                }
+            }
+            rows.clear();
+            cols.clear();
+            blocks.clear();
+        }
+
+        return true;
+    }
+
+
+    // 249. Group Shifted Strings
+    public static List<List<String>> groupStrings(String[] strs) {
+        Map<String, List<String>> shiftedStrs = new TreeMap<>();
+        for (String str : strs) {
+
+            String key = getShiftKey(str);
+            shiftedStrs.computeIfAbsent(key, k -> new ArrayList<>()).add(str);
+        }
+
+        return new ArrayList<>(shiftedStrs.values());
+    }
+
+
+
+    public static String getShiftKey(String s) {
+        if (s.length() == 1) {
+            return "0";
+        }
+
+        StringBuilder key = new StringBuilder();
+        for (int i = 1; i < s.length(); i++) {
+            int diff = (s.charAt(i) - s.charAt(i - 1) + 26) % 26;
+            key.append(diff).append(",");
+        }
+        return key.toString();
+    }
+
+    // 49. Group Anagrams
+    public static List<List<String>> groupAnagrams(String[] strs) {
+
+        Map<String, List<String>> anagrams = new TreeMap<>();
+        for (String str : strs) {
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            String key = new String(chars);
+            anagrams.computeIfAbsent(key, k -> new ArrayList<>()).add(str);
+        }
+
+        return new ArrayList<>(anagrams.values());
     }
 
 
