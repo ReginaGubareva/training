@@ -2,19 +2,78 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
+        System.out.println(getLucky("zbax", 2));
+    }
 
-        TreeNode root = new TreeNode(1);
-        TreeNode left = new TreeNode(2);
-        TreeNode right = new TreeNode(3);
-        root.left = left;
-        root.right = right;
-        TreeNode left1 = new TreeNode(4);
-        TreeNode left2 = new TreeNode(2);
-        left.left = left1;
-        right.left = left2;
-        right.left.left = new TreeNode(4);
-        right.right = new TreeNode(4);
-        findDuplicateSubtrees(root);
+    // 1945. Sum of Digits of String After Convert
+    public static int getLucky(String s, int k) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < s.length(); i++){
+            sb.append(s.charAt(i) - 'a' + 1);
+        }
+        return transformer(Integer.parseInt(sb.toString()), k);
+    }
+
+    public static int transformer(int n, int k){
+        while (k != 0) {
+            int sum = 0;
+            while (n != 0) {
+                sum += n % 10;
+                n = n / 10;
+            }
+            n = sum;
+            k--;
+        }
+        return n;
+    }
+
+
+
+    // 454. 4Sum II
+    public static int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        Map<Integer, Integer> pair = new HashMap<>();
+        int count = 0;
+
+        for (int value : nums1) {
+            for (int k : nums2) {
+                int sum = value + k;
+                pair.merge(sum, 1, Integer::sum);
+            }
+        }
+
+        for (int j : nums3) {
+            for (int k : nums4) {
+                int sum2 = j + k;
+                int key = -sum2;
+                count += pair.getOrDefault(key, 0);
+            }
+        }
+        return count;
+    }
+
+    // 3. Longest Substring Without Repeating Characters
+    public static int lengthOfLongestSubstring(String s) {
+        if(s.isEmpty()) return 0;
+        int count = 0;
+        Map<Character, Integer> dict = new HashMap<>();
+        for(int i = 0; i < s.length(); i++){
+//            if(dict.containsKey(s.charAt(i)))
+        }
+        return count;
+    }
+
+    // 771. Jewels and Stones
+    public static int numJewelsInStones(String jewels, String stones) {
+        int count = 0;
+        Set<Character> jewSet = new HashSet<>();
+        for(int i =0; i < jewels.length(); i++){
+            jewSet.add(jewels.charAt(i));
+        }
+
+        for(int i = 0; i < stones.length(); i++){
+            if(jewSet.contains(stones.charAt(i))) count++;
+        }
+        return count;
     }
 
     // 652. Find Duplicate Subtrees
