@@ -2,7 +2,33 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-        System.out.println(getLucky("zbax", 2));
+        ValidWordAbbr validWordAbbr = new ValidWordAbbr(new String[]{"dear", "cake", "door"});
+    }
+
+
+
+    // 347. Top K Frequent Elements
+    public static int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for(int x : nums){
+            if(freq.containsKey(x)){
+                freq.merge(x, 1, Integer::sum);
+            } else {
+                freq.put(x, 1);
+            }
+        }
+
+        System.out.println(freq);
+        int[] sortedKeys = freq.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .limit(k)
+                .mapToInt(Map.Entry::getValue)
+                .toArray();
+
+
+        System.out.println("Sorted keys (by value): " + Arrays.toString(sortedKeys));
+        return sortedKeys;
     }
 
     // 1945. Sum of Digits of String After Convert
