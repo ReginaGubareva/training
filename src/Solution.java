@@ -2,7 +2,59 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-        ValidWordAbbr validWordAbbr = new ValidWordAbbr(new String[]{"dear", "cake", "door"});
+        int[] nums = {1, 3, 4, 5};
+        System.out.println(searchInsert(nums, 4));
+    }
+
+    // 35. Search Insert Position
+    public static int searchInsert(int[] nums, int target) {
+
+        int right = 0, left = nums.length-1;
+        while (right < left) {
+            int middle = (right+left)/2;
+            if(nums[middle] == target){
+                return middle;
+            } else if(nums[middle] < target){
+                right = middle + 1;
+            } else {
+                left = middle - 1;
+            }
+        }
+        return nums.length + 1;
+    }
+
+    // 25. Reverse Nodes in k-Group
+    public static ListNode reverseKGroup(ListNode head, int k) {
+        ListNode prevTail = null;
+        ListNode curHead = head;
+        ListNode curTail = head;
+        ListNode nextHead = null;
+
+        while(curHead != null){
+            int count = 1;
+            while(curTail.next != null && count < k){
+                curTail = curTail.next;
+                count++;
+            }
+            if(count != k) break;
+            nextHead = curTail.next;
+            curTail.next = null;
+            if(prevTail != null){
+                prevTail.next = null;
+            } else {
+                head = curTail;
+            }
+
+            curHead.next = nextHead;
+
+            prevTail = curHead;
+            curHead = nextHead;
+            curTail = nextHead;
+
+
+
+        }
+        return head;
     }
 
 
