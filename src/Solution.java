@@ -2,8 +2,158 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-        int[] nums = {1, 3, 4, 5};
-        System.out.println(searchInsert(nums, 4));
+        TreeNode root = new TreeNode(1);
+        root.right = new TreeNode(2);
+        root.right.left = new TreeNode(3);
+        System.out.println(inorderTraversalIterative(root));
+    }
+
+    public static List<Integer> postorderTraversalIteratively(TreeNode root) {
+        List<Integer> tree = new ArrayList<>();
+        if(root == null) return tree;
+
+        Stack<TreeNode> stack = new Stack<>();
+
+        TreeNode current = root;
+        TreeNode lastVisited = null;
+
+        while (current != null || !stack.isEmpty()){
+            if (current != null){
+                stack.push(current);
+                current = current.left;
+            } else {
+                TreeNode peekNode = stack.peek();
+                if(peekNode.right != null && peekNode.right != lastVisited){
+                    current = peekNode.right;
+                } else {
+                    tree.add(stack.pop().val);
+                    lastVisited = peekNode;
+                }
+            }
+        }
+
+        return tree;
+    }
+
+    public static List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> tree = new ArrayList<>();
+        if(root == null) return tree;
+        tree.addAll(postorderTraversal(root.left));
+        tree.addAll(postorderTraversal(root.right));
+        tree.add(root.val);
+
+        return tree;
+    }
+
+    public static List<Integer> inorderTraversalIterative(TreeNode root) {
+        List<Integer> tree = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+
+        TreeNode current = root;
+        while(current != null || !stack.isEmpty()){
+            while (current != null){
+                stack.push(current);
+                current = current.left;
+            }
+            current = stack.pop();
+            tree.add(current.val);
+            current = current.right;
+        }
+
+        return tree;
+    }
+
+    public static List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> tree = new ArrayList<>();
+        if(root == null){
+            return tree;
+        }
+        tree.addAll(inorderTraversal(root.left));
+        tree.add(root.val);
+        tree.addAll(inorderTraversal(root.right));
+
+        return tree;
+    }
+
+    // 144. Binary Tree Preorder Traversal
+    public static List<Integer> preorderTraversalIteratively(TreeNode root) {
+        List<Integer> tree = new ArrayList<>();
+        if (root == null) {
+            return tree;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()){
+            TreeNode currentNode = stack.pop();
+            tree.add(currentNode.val);
+
+            if(currentNode.right != null){
+                stack.push(currentNode.right);
+            }
+            if(currentNode.left != null){
+                stack.push(currentNode.left);
+            }
+
+        }
+        return tree;
+    }
+
+    public static List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> tree = new ArrayList<>();
+        if (root == null) {
+            return tree;
+        }
+        tree.add(root.val);
+        tree.addAll(preorderTraversal(root.left));
+        tree.addAll(preorderTraversal(root.right));
+        return tree;
+    }
+
+    // 79. Word Search
+    public static boolean exist(char[][] board, String word) {
+        int rows = board.length;
+        int cols = board[0].length;
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                if(board[i][j] == word.charAt(0)){
+                    if(dfs(board, word, i, j, 0)) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean dfs(char[][] board, String word, int i, int j, int index){
+        if(index == word.length()){
+            return true;
+        }
+
+        if(i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word.charAt(index)){
+            return false;
+        }
+
+        char temp = board[i][j];
+        board[i][j] = '#';
+        boolean found = dfs(board, word, i + 1, j, index + 1) ||  // down
+                dfs(board, word, i - 1, j, index + 1) ||  // up
+                dfs(board, word, i, j + 1, index + 1) ||  // right
+                dfs(board, word, i, j - 1, index + 1);    // left
+
+        board[i][j] = temp;
+        return found;
+    }
+
+    // 98. Validate Binary Search Tree
+    public static boolean isValidBST(TreeNode root) {
+        return valid(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    public static boolean valid(TreeNode node,  long minimum, long maximum){
+        if(node == null) return true;
+        if(!(node.val > minimum & node.val < maximum)) return false;
+        return valid(node.left, minimum, node.val) & valid(node.right, node.val, maximum);
     }
 
     // 35. Search Insert Position
