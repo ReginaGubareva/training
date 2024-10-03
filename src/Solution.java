@@ -8,6 +8,85 @@ public class Solution {
         System.out.println(inorderTraversalIterative(root));
     }
 
+    // 250. Count Univalue Subtrees
+    private static int count = 0;
+    public static int countUnivalSubtrees(TreeNode root) {
+        isUniVal(root);
+        return count;
+    }
+
+    private static boolean isUniVal(TreeNode node){
+        if(node == null) return true;
+
+        boolean leftUnival = isUniVal(node.left);
+        boolean rightUnival = isUniVal(node.right);
+
+        if(!leftUnival || !rightUnival) return false;
+        if(node.left != null && node.left.val != node.val) return false;
+        if(node.right != null && node.right.val != node.val) return false;
+        count++;
+        return true;
+    }
+
+
+    // 112. Path Sum
+    public static boolean hasPathSum(TreeNode root, int targetSum) {
+        if(root == null) return false;
+        if(root.right == null && root.left == null){
+            return targetSum == root.val;
+        }
+        boolean leftSum = hasPathSum(root.left, targetSum - root.val);
+        boolean rightSum = hasPathSum(root.right, targetSum - root.val);
+        return leftSum || rightSum;
+    }
+
+    // 104. Max depth tree bottom-up
+    public static int maxDepth2(TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(maxDepth2(root.left), maxDepth2(root.right));
+    }
+
+
+    // 104. Max depth tree: top-down
+    public int maxDepthTree(TreeNode root) {
+       return maximum_depth(root, 1);
+    }
+
+    private int maximum_depth(TreeNode root, int depth){
+        if(root == null) return depth - 1;
+
+        int leftDepth = maximum_depth(root.left, depth+1);
+        int rightDepth = maximum_depth(root.right, depth + 1);
+
+        return Math.max(leftDepth, rightDepth);
+    }
+
+
+    //
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        List<List<Integer>> tree = new ArrayList<>();
+        if(root != null) queue.offer(root);
+        TreeNode current;
+        while (!queue.isEmpty()){
+            List<Integer> level = new ArrayList<>();
+            for (int i = 0; i < queue.size(); i++){
+                current = queue.poll();
+                level.add(current.val);
+                if(current.left != null){
+                    queue.offer(current.left);
+                }
+                if(current.right != null){
+                    queue.offer(current.right);
+                }
+            }
+            tree.add(level);
+        }
+
+        return tree;
+    }
+
+
     public static List<Integer> postorderTraversalIteratively(TreeNode root) {
         List<Integer> tree = new ArrayList<>();
         if(root == null) return tree;
