@@ -20,9 +20,9 @@ class ValidWordAbbr {
         return s.length() > 2 ? s.charAt(0) + String.valueOf(s.length() - 2) + s.charAt(s.length() - 1) : s;
     }
 
-    public boolean isUnique(String word) {
-        String abbreviation = computeAbbreviation(word);
-        if(!abbreviations.containsKey(abbreviation)) return true;
-        return abbreviations.get(abbreviation).size() == 1 & abbreviations.get(abbreviation).getFirst().equals(word);
-    }
+//    public boolean isUnique(String word) {
+//        String abbreviation = computeAbbreviation(word);
+//        if(!abbreviations.containsKey(abbreviation)) return true;
+//        return abbreviations.get(abbreviation).size() == 1 & abbreviations.get(abbreviation).getFirst().equals(word);
+//    }
 }

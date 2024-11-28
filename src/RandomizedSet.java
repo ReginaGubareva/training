@@ -22,16 +22,16 @@ class RandomizedSet {
         return true;
     }
 
-    public boolean remove(int val) {
-        if(!map.containsKey(val)) return false;
-        int index  = map.get(val);
-        int last = list.getLast();
-        map.put(last, index);
-        map.remove(val);
-        list.set(index, last);
-        list.remove(last);
-        return true;
-    }
+//    public boolean remove(int val) {
+//        if(!map.containsKey(val)) return false;
+//        int index  = map.get(val);
+//        int last = list.getLast();
+//        map.put(last, index);
+//        map.remove(val);
+//        list.set(index, last);
+//        list.remove(last);
+//        return true;
+//    }
 
     public int getRandom() {
         return list.get(random.nextInt(list.size()));
